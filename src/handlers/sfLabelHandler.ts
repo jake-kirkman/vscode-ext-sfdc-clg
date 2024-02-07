@@ -5,6 +5,7 @@
 import * as xmlDom from 'xmldom';
 
 import * as vscode from 'vscode';
+import * as utility from '../libs/utility'
 import * as CONSTANTS from '../libs/constants';
 import * as XmlWorker from '../workers/xmlWorker';
 import * as fs from 'fs';
@@ -64,14 +65,46 @@ export function serializeDocument(pDoc: Document): string {
 
 export function addLabel(pDocument: Document, pLabelData: Label) {
     let labelElement = pDocument.createElement('labels');
-    XmlWorker.appendTextNode(pDocument, labelElement, 'fullName', pLabelData.FullName);
-    XmlWorker.appendTextNode(pDocument, labelElement, 'language', pLabelData.Language);
+    XmlWorker.appendTextNode(pDocument, labelElement, 'fullName', XmlWorker.escapeXml(pLabelData.FullName));
+    XmlWorker.appendTextNode(pDocument, labelElement, 'language', XmlWorker.escapeXml(pLabelData.Language));
     XmlWorker.appendTextNode(pDocument, labelElement, 'protected', '' + pLabelData.Protected);
-    XmlWorker.appendTextNode(pDocument, labelElement, 'shortDescription', pLabelData.ShortDescription);
-    XmlWorker.appendTextNode(pDocument, labelElement, 'value', pLabelData.Value);
+    XmlWorker.appendTextNode(pDocument, labelElement, 'shortDescription', XmlWorker.escapeXml(pLabelData.ShortDescription));
+    XmlWorker.appendTextNode(pDocument, labelElement, 'value', XmlWorker.escapeXml(pLabelData.Value));
     pDocument.documentElement.appendChild(labelElement);
 }
 
-export function sortLabels() {
-
+export function sortLabels(pDocument: Document) {
+    //Init vars
+    let sortingArray: {Element: Node, Name: string}[] = [];
+    let labelElements = pDocument.documentElement.childNodes;
+    Array.from(labelElements).forEach((element) => {
+        pDocument.documentElement.removeChild(element);
+        if(element.hasChildNodes()) {
+            let name: string | undefined;
+            for(let i = 0; i < element.childNodes.length; i++) {
+                let childElement = element.childNodes[i];
+                if(childElement.nodeName == 'fullName' && null != childElement.textContent) {
+                    name = childElement.textContent;
+                    break;
+                } 
+            }
+            if(undefined != name) {
+                sortingArray.push({
+                    //Clone node here because the `appendNode` doesn't append a child properly
+                    //if the `parentNode` is still populated, and we've already removed it from the parent
+                    //but that doesn't reflect on the node. So cloning it here fixes that issue
+                    //Bit janky I know, but really this needs a much better XML parser
+                    Element: element.cloneNode(true), 
+                    Name: name!.toLowerCase()
+                });
+            }
+        }
+    });
+    //Sort
+    sortingArray.sort((pValA, pValB) => utility.sortObject(pValA, pValB, {property: 'Name', direction: CONSTANTS.SORT_ASCENDING}));
+    //Re-add elements
+    sortingArray.forEach(pItem => {
+        // console.log(`##Item : pElement : `, pItem.Element);
+        pDocument.documentElement.appendChild(pItem.Element);
+    });
 }

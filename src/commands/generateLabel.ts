@@ -107,6 +107,18 @@ export class GenerateLabelCommand extends Command {
             )
             , new CommandStep(
                 {
+                    Label: 'Sorting Labels',
+                    Name: 'SortingLabels',
+                    OnProcess: async () => {
+                        sfLabelHandler.sortLabels(xmlDoc);
+                    },
+                    OnCondition: async () => {
+                        return vscode.workspace.getConfiguration().get(CONSTANTS.CFG_KEY_SORT_LABELS) as Boolean;
+                    }
+                }
+            )
+            , new CommandStep(
+                {
                     Label: 'Saving Data',
                     Name: 'SavingData',
                     OnProcess: async () => {

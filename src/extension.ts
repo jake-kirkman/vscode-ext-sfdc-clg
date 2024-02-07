@@ -20,8 +20,9 @@ export function activate(pContext: vscode.ExtensionContext) {
         //Initialise commands
         new GenerateLabelCommand().registerCommand();
 
-    } catch(ex) {
+    } catch(ex: any) {
         console.error(ex);
+        logHandler.error(ex.message || JSON.stringify(ex));
     }
 
 }

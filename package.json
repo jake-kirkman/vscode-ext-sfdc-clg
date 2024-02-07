@@ -3,13 +3,19 @@
   "displayName": "Salesforce Custom Label Generator",
   "description": "Allows the quick generation of Salesforce Custom Labels when working in Apex",
   "version": "0.0.1",
+  "author": {
+    "name": "Jake Kirkman"
+  },
+  "publisher": "Jake Kirkman",
   "engines": {
     "vscode": "^1.76.0"
   },
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onLanguage:apex"
+  ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
@@ -87,7 +93,6 @@
     "@typescript-eslint/eslint-plugin": "^5.56.0",
     "@typescript-eslint/parser": "^5.56.0",
     "@vscode/test-electron": "^2.3.0",
-    "xml-formatter": "^3.6.2",
     "eslint": "^8.36.0",
     "glob": "^8.1.0",
     "mocha": "^10.2.0",
