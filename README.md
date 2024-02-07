@@ -13,7 +13,7 @@ Quick VSCode plugin to quickly create new Custom Labels from within the VSCode t
 This extension relies on there being selected text in your current active editor, and can be activated either through the context menu selecting the "Generate label from selected text", or running the `SFDX-CLG: Generate Label From Selected Text` in the command pallette.
 Once a label is added to your metadata, you'll have to manually deploy the file to your Salesforce instance before being able to access it in other bits of metadata.
 
-![Gif showcasing the usage of the extension](./media/dbb7ca53-7a91-4279-8bac-558904e71b76.gif)
+![Gif showcasing the usage of the extension](./media/demo-usage.gif)
 
 ## Extension Settings
 
