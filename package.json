@@ -1,10 +1,10 @@
 {
-  "name": "salesforce-custom-label-generator",
+  "name": "sfdc-clg",
   "displayName": "Salesforce Custom Label Generator",
   "description": "Allows the quick generation of Salesforce Custom Labels when working in Apex",
   "version": "0.0.1",
   "engines": {
-    "vscode": "^1.86.0"
+    "vscode": "^1.76.0"
   },
   "categories": [
     "Other"
@@ -14,10 +14,60 @@
   "contributes": {
     "commands": [
       {
-        "command": "salesforce-custom-label-generator.helloWorld",
-        "title": "Hello World"
+        "command": "sfdc-clg.generate-label-from-selected-text",
+        "title": "Generate Label From Selected Text",
+        "category": "SFDX-CLG"
       }
-    ]
+    ],
+    "configuration": {
+      "title": "Salesforce Custom Label Generator",
+      "properties": {
+        "sfdc-clg.default-language": {
+          "type": "string",
+          "description": "The default language that the Custom Label should be set to",
+          "default": "en_US"
+        },
+        "sfdc-clg.path-to-label": {
+          "type": "string",
+          "description": "Where your CustomLabels.labels-meta.xml is stored",
+          "default": "/force-app/main/default/labels/CustomLabels.labels-meta.xml"
+        },
+        "sfdc-clg.apex-replace-prefix": {
+          "type": "string",
+          "description": "The text prefix that is added to your label name when replacing your selected text (e.g `Label.MyNewLabel`)",
+          "default": "Label."
+        },
+        "sfdc-clg.short-description-same-as-name": {
+          "type": "boolean",
+          "description": "Should the Short Description property be set to the same as the Full Name property?",
+          "default": true
+        },
+        "sfdc-clg.prompt-for-categories": {
+          "type": "boolean",
+          "description": "When creating a new label, should the command prompt for categories?",
+          "default": false
+        },
+        "sfdc-clg.sort-labels-after-save": {
+          "type": "boolean",
+          "description": "Should the labels be sorted by Full Name once the new label has been added?",
+          "default": true
+        },
+        "sfdc-clg.should-new-labels-be-protected": {
+          "type": "boolean",
+          "description": "Should the labels be sorted by Full Name once the new label has been added?",
+          "default": true
+        }
+      }
+    },
+    "menus": {
+        "editor/context": [
+            {
+                "command": "sfdc-clg.generate-label-from-selected-text",
+                "when": "editorLangId == apex",
+                "group": "1_modification"
+            }
+        ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
@@ -28,16 +78,24 @@
     "test": "node ./out/test/runTest.js"
   },
   "devDependencies": {
-    "@types/vscode": "^1.86.0",
+    "@types/cross-spawn": "^6.0.2",
     "@types/glob": "^8.1.0",
     "@types/mocha": "^10.0.1",
     "@types/node": "16.x",
+    "@types/vscode": "^1.76.0",
+    "@types/xmldom": "^0.1.34",
     "@typescript-eslint/eslint-plugin": "^5.56.0",
     "@typescript-eslint/parser": "^5.56.0",
+    "@vscode/test-electron": "^2.3.0",
+    "xml-formatter": "^3.6.2",
     "eslint": "^8.36.0",
     "glob": "^8.1.0",
     "mocha": "^10.2.0",
-    "typescript": "^4.9.5",
-    "@vscode/test-electron": "^2.3.0"
+    "typescript": "^4.9.5"
+  },
+  "dependencies": {
+    "cross-spawn": "^7.0.3",
+    "xml-formatter": "^3.6.2",
+    "xmldom": "^0.6.0"
   }
 }
