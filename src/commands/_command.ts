@@ -29,7 +29,7 @@ export abstract class Command {
     async executeCommand(...pArgs: any) {
         try {
             let progressMessage = `Executing ${this.CommandLabel || 'Command'}`;
-            logHandler.log(`Execution Command: ${this.CommandLabel} [${this.CommandName}]`);
+            logHandler.log(`Executing Command: ${this.CommandLabel} [${this.CommandName}]`);
 
             //Create wait dialog
             await vscode.window.withProgress(
@@ -69,7 +69,12 @@ export abstract class Command {
                         pProgress.report({message: progressMessage, increment: stepIncrement});
                         //Await step
                         if(stepProcessor != undefined) {
-                            let errorMessage = await stepProcessor;
+                            let errorMessage;
+                            try {
+                                errorMessage = await stepProcessor;
+                            } catch(ex: Error | any) {
+                                errorMessage = `Unhandled exception occurred during step ${step.Name}: ${ex.message || JSON.stringify(ex)}`;
+                            }
                             if(errorMessage != undefined) {
                                 logHandler.error(`Command Failed [${this.CommandLabel}]: ${errorMessage}`);
                                 vscode.window.showErrorMessage(`Command [${this.CommandLabel}] failed due to: ${errorMessage}`);

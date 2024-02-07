@@ -25,5 +25,5 @@ export function appendTextNode(pDoc: Document, pParentElement: Element, pTagName
 }
 
 export function escapeXml(pText: string): string {
-    return pText.replace(/[&'"<>]/g, s => XML_ESCAPES[s]);
+    return pText?.replace(/[&'"<>]/g, s => XML_ESCAPES[s]) || '';
 }

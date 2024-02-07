@@ -9,7 +9,6 @@ import * as utility from '../libs/utility'
 import * as CONSTANTS from '../libs/constants';
 import * as XmlWorker from '../workers/xmlWorker';
 import * as fs from 'fs';
-import * as path from 'path';
 import Label from '../models/label';
 
 const xmlFormat = require('xml-formatter');
@@ -21,7 +20,7 @@ const xmlFormat = require('xml-formatter');
 export function getPathToLabelFile(): string | undefined {
     let folders = vscode.workspace.workspaceFolders;
     if(undefined != folders && folders.length > 0) {
-        return folders[0].uri.fsPath + vscode.workspace.getConfiguration().get(CONSTANTS.CFG_KEY_PATH_TO_LABELS)!
+        return folders[0].uri.fsPath + vscode.workspace.getConfiguration().get(CONSTANTS.CFG_KEY_PATHS_LABELS_METADATA)!
     } else {
         return undefined;
     }

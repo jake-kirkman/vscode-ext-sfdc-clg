@@ -17,7 +17,7 @@ var Logger: vscode.OutputChannel;
 
 //Init
 export function initiate() {
-    Logger = vscode.window.createOutputChannel('SFDC C:G');
+    Logger = vscode.window.createOutputChannel('SFDC-CLG');
     dataHandler.getExtensionContext().subscriptions.push(Logger);
 }
 

@@ -2,7 +2,7 @@
   "name": "sfdc-clg",
   "displayName": "Salesforce Custom Label Generator",
   "description": "Allows the quick generation of Salesforce Custom Labels when working in Apex",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "author": {
     "name": "Jake Kirkman"
   },
@@ -28,40 +28,83 @@
     "configuration": {
       "title": "Salesforce Custom Label Generator",
       "properties": {
-        "sfdc-clg.default-language": {
-          "type": "string",
-          "description": "The default language that the Custom Label should be set to",
-          "default": "en_US"
+        "sfdc-clg.prompts.language": {
+            "type": "boolean",
+            "title": "Prompt for label language",
+            "description": "Should it prompt for language?",
+            "default": false,
+            "order": 0
         },
-        "sfdc-clg.path-to-label": {
+        "sfdc-clg.prompts.protected": {
+            "type": "boolean",
+            "title": "Prompt for protected",
+            "description": "Should the GenerateLabel command prompt for protected?",
+            "default": false,
+            "order": 0
+        },
+        "sfdc-clg.prompts.short-description": {
+            "type": "boolean",
+            "title": "Prompt for label language",
+            "description": "Should the GenerateLabel command prompt for short description? Short Description default will be the value of fullName",
+            "default": false,
+            "order": 0
+        },
+        "sfdc-clg.prompts.category": {
+            "type": "boolean",
+            "title": "Prompt for label category",
+            "description": "Should the GenerateLabel command prompt for label categories?",
+            "default": false,
+            "order": 0
+        },
+        "sfdc-clg.defaults.language": {
+            "type": "string",
+            "title": "Label language default",
+            "description": "What should be the default for Language?",
+            "default": "en_US",
+            "order": 1
+        },
+        "sfdc-clg.defaults.protected": {
+            "type": "string",
+            "enum": ["True", "False"],
+            "title": "Protected default",
+            "description": "What should the default be for protected?",
+            "default": false,
+            "order": 1
+        },
+        "sfdc-clg.defaults.category": {
+            "type": "string",
+            "title": "Label category default",
+            "description": "What should be the default for Category?",
+            "default": "",
+            "order": 1
+        },
+        "sfdc-clg.replacements.replace-selected-text-with-label": {
+            "type": "boolean",
+            "title": "Replace selected text with label",
+            "description": "When a label has been created, should the selected text be replaced with the new label? (e.g Label.MyNewLabel)",
+            "default": true,
+            "order": 2
+        },
+        "sfdc-clg.replacements.replace-prefix": {
+            "type": "string",
+            "title": "Selected text replacement prefix",
+            "description": "What should be the text appended before the label name? (the `Label.` part in `Label.MyLabel`)",
+            "default": "Label.",
+            "order": 2
+        },
+        "sfdc-clg.paths.label-metadata-location": {
           "type": "string",
+          "title": "Path to Label Metadata",
           "description": "Where your CustomLabels.labels-meta.xml is stored",
-          "default": "/force-app/main/default/labels/CustomLabels.labels-meta.xml"
+          "default": "/force-app/main/default/labels/CustomLabels.labels-meta.xml",
+          "order": 3
         },
-        "sfdc-clg.apex-replace-prefix": {
-          "type": "string",
-          "description": "The text prefix that is added to your label name when replacing your selected text (e.g `Label.MyNewLabel`)",
-          "default": "Label."
-        },
-        "sfdc-clg.short-description-same-as-name": {
+        "sfdc-clg.config.sort-labels-on-generation": {
           "type": "boolean",
-          "description": "Should the Short Description property be set to the same as the Full Name property?",
-          "default": true
-        },
-        "sfdc-clg.prompt-for-categories": {
-          "type": "boolean",
-          "description": "When creating a new label, should the command prompt for categories?",
-          "default": false
-        },
-        "sfdc-clg.sort-labels-after-save": {
-          "type": "boolean",
-          "description": "Should the labels be sorted by Full Name once the new label has been added?",
-          "default": true
-        },
-        "sfdc-clg.should-new-labels-be-protected": {
-          "type": "boolean",
-          "description": "Should the labels be sorted by Full Name once the new label has been added?",
-          "default": true
+          "title": "Sort labels on generation",
+          "description": "Should the CustomLabel.labels-meta.xml be sorted when a new label is added?",
+          "default": true,
+          "order": 4
         }
       }
     },
@@ -69,7 +112,7 @@
         "editor/context": [
             {
                 "command": "sfdc-clg.generate-label-from-selected-text",
-                "when": "editorLangId == apex",
+                "when": "editorLangId == apex || editorLangId == javascript",
                 "group": "1_modification"
             }
         ]
