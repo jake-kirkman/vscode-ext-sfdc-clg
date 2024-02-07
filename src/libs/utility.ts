@@ -5,10 +5,6 @@
 import { exec } from 'child_process';
 import * as CONSTANTS from '../libs/constants';
 
-// using cross-spawn to mitigate against windows issues with spawn - https://www.npmjs.com/package/cross-spawn
-import * as spawn from 'cross-spawn';
-import * as path from 'path';
-
 /*=========================================================
         Methods
 =========================================================*/
@@ -51,51 +47,4 @@ export function openUrl(pUrl: string) {
             }
         })
     })
-}
-
-// Use this for spawning a child process to kick off our sfdx commands, given
-// how much data can be spat back spawn seemed the logical option.
-//
-// This will likely need tweaking, I think we could do with passing in a
-// callback for shell.stdout.on to make this a little better
-export function runCommand(processName: string, args: string[], writeToConsole: boolean, errorMsg: string) {
-    return new Promise(async (resolve, reject) => {
-        const shell = spawn(processName, args, {
-            // stdio take 3 args, stdin, stdout, stderr - we inherit stdin from
-            // the parent process, means we can provide input to the child if
-            // prompted
-            stdio: ["inherit"],
-            windowsHide: true
-        });
-
-        // Put this here mainly to write the JSON from the child process back to
-        // main, again might be recatored by utilising a callback
-        let stdoutResult = '';
-
-        // something has gone horribly wrong with the child process
-        shell.on('error', reject);
-
-        // Build JSON String - well it writes all output regardless of call
-        // which is horrific but thats why I originally slammed this in here -
-        // again specific callback for this is prolly the way forward
-        shell.stdout?.on('data', (data: any) => {
-            if(writeToConsole) process.stdout.write(data);
-
-            stdoutResult += data.toString()
-        });
-        if(writeToConsole) {
-            shell.stderr?.on('data', (data: any) => process.stderr.write(data));
-        }
-
-        shell.on('exit', (code: number) => {
-            // exit code from the child process, 0 success, 1 error - should an
-            // sfdx command fail it will handily return 1 rather than the child
-            // process full on bailing
-            //
-            // note we resolve with the massive string of output from the child
-            // process, we could get the installed package job ids from this -
-            // again lets write a specific callback to handle it or something
-             code ? reject(new Error(errorMsg)) : resolve(stdoutResult);
-        });
-    });
 }
