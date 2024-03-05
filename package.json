@@ -2,12 +2,12 @@
   "name": "sfdc-clg",
   "displayName": "Salesforce Custom Label Generator",
   "description": "Allows the quick generation of Salesforce Custom Labels when working in Apex",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "icon": "media/package-icon.png",
   "repository": {
     "url": "https://github.com/jake-kirkman/vscode-ext-sfdc-clg"
   },
-  "tags": [
+  "keywords": [
     "Salesforce",
     "Custom Label",
     "Apex",
