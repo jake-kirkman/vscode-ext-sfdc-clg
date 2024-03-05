@@ -7,6 +7,13 @@
   "repository": {
     "url": "https://github.com/jake-kirkman/vscode-ext-sfdc-clg"
   },
+  "tags": [
+    "Salesforce",
+    "Custom Label",
+    "Apex",
+    "Utility",
+    "SFDC"
+  ],
   "author": {
     "name": "Jake Kirkman"
   },
